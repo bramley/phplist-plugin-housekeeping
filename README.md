@@ -35,5 +35,6 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.0.2+20170911  Correct use of wrong number of records deleted
     1.0.1+20170911  Enter interval in full
     1.0.0+20170911  First version

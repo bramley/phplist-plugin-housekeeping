@@ -1,3 +1,6 @@
+version 1.0.2+20170911
+      Correct number of bounceregex_bounce records deleted
+
 version 1.0.1+20170911
       Now enter interval in full instead of implicit days or months
 

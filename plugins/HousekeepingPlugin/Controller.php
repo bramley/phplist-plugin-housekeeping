@@ -14,7 +14,6 @@
 namespace phpList\plugin\HousekeepingPlugin;
 
 use phpList\plugin\Common\Controller as CommonController;
-use phpList\plugin\Common\Context;
 
 /**
  * This class is the controller for the plugin providing the action methods.
@@ -116,7 +115,7 @@ END;
             }
 
             if ($regexBounce > 0) {
-                $event = sprintf('%d rows deleted from the bounceregex_bounce table', $umb);
+                $event = sprintf('%d rows deleted from the bounceregex_bounce table', $regexBounce);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
@@ -143,7 +142,7 @@ END;
 
     private function validateInterval($interval)
     {
-        return (preg_match('/^(\d+\s+(day|week|month|quarter|year))s?$/i', trim($interval), $matches))
+        return preg_match('/^(\d+\s+(day|week|month|quarter|year))s?$/i', trim($interval), $matches)
             ? $matches[1]
             : false;
     }
