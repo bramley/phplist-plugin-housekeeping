@@ -1,3 +1,6 @@
+version 1.0.1+20170911
+      Now enter interval in full instead of implicit days or months
+
 version 1.0.0+20170911
       First version
 

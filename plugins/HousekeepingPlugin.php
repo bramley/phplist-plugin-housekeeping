@@ -24,6 +24,7 @@ class HousekeepingPlugin extends phplistPlugin
     public $name = 'Database housekeeping';
     public $authors = 'Duncan Cameron';
     public $description = 'Selectively delete old data from the phplist database';
+    public $documentationUrl = 'https://resources.phplist.com/plugin/housekeeping';
     public $commandlinePluginPages = array('process');
     public $topMenuLinks = array(
         'process' => array('category' => 'system'),
@@ -35,29 +36,23 @@ class HousekeepingPlugin extends phplistPlugin
 
     public $settings = array(
         'housekeeping_message_age' => array(
-            'description' => 'Threshold (in months) for deleting campaigns. Set to 0 to disable this function.',
-            'type' => 'integer',
-            'value' => 0,
-            'min' => 0,
-            'max' => 50,
+            'description' => 'Threshold for deleting campaigns. Leave empty to disable this function.',
+            'type' => 'text',
+            'value' => '',
             'allowempty' => 1,
             'category' => 'Housekeeping',
         ),
         'housekeeping_event_log_age' => array(
-            'description' => 'Threshold (in months) for deleting event log records. Set to 0 to disable this function.',
-            'type' => 'integer',
-            'value' => 0,
-            'min' => 0,
-            'max' => 50,
+            'description' => 'Threshold for deleting event log records. Leave empty to disable this function.',
+            'type' => 'text',
+            'value' => '',
             'allowempty' => 1,
             'category' => 'Housekeeping',
         ),
         'housekeeping_bounces_age' => array(
-            'description' => 'Threshold (in days) for deleting bounce records. Set to 0 to disable this function.',
-            'type' => 'integer',
-            'value' => 0,
-            'min' => 0,
-            'max' => 365,
+            'description' => 'Threshold for deleting bounce records. Leave empty to disable this function.',
+            'type' => 'text',
+            'value' => '',
             'allowempty' => 1,
             'category' => 'Housekeeping',
         ),

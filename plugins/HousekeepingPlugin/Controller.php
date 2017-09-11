@@ -59,10 +59,8 @@ END;
         /*
          * Process messages
          */
-        $months = getConfig('housekeeping_message_age');
-
-        if ($months > 0) {
-            $campaigns = $this->dao->selectOldCampaigns($months);
+        if ($interval = $this->validateInterval(getConfig('housekeeping_message_age'))) {
+            $campaigns = $this->dao->selectOldCampaigns($interval);
 
             if (count($campaigns) > 0) {
                 foreach ($campaigns as $c) {
@@ -74,44 +72,39 @@ END;
                         $this->logEvent($event);
                         $this->context->output($event);
                     }
-                    break;
                 }
             } else {
-                $this->context->output("No campaigns older than $months months to delete");
+                $this->context->output("No campaigns older than $interval to delete");
             }
         }
 
         /*
          * Process event log
          */
-        $months = getConfig('housekeeping_event_log_age');
-
-        if ($months > 0) {
-            $deletedCount = $this->dao->trimEventLog($months);
+        if ($interval = $this->validateInterval(getConfig('housekeeping_event_log_age'))) {
+            $deletedCount = $this->dao->trimEventLog($interval);
 
             if ($deletedCount > 0) {
                 $event = sprintf('%d rows deleted from the event log', $deletedCount);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No event log rows older than $months months to delete");
+                $this->context->output("No event log rows older than $interval to delete");
             }
         }
 
         /*
          * Process bounces
          */
-        $days = getConfig('housekeeping_bounces_age');
-
-        if ($days > 0) {
-            list($bounces, $umb, $regexBounce) = $this->dao->deleteBounces($days);
+        if ($interval = $this->validateInterval(getConfig('housekeeping_bounces_age'))) {
+            list($bounces, $umb, $regexBounce) = $this->dao->deleteBounces($interval);
 
             if ($bounces > 0) {
                 $event = sprintf('%d bounce rows deleted', $bounces);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No bounce rows older than $days days to delete");
+                $this->context->output("No bounce rows older than $interval to delete");
             }
 
             if ($umb > 0) {
@@ -119,7 +112,7 @@ END;
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No user_message_bounce rows older than $days days to delete");
+                $this->context->output("No user_message_bounce rows older than $interval to delete");
             }
 
             if ($regexBounce > 0) {
@@ -146,5 +139,12 @@ END;
             }
         }
         $this->context->finish();
+    }
+
+    private function validateInterval($interval)
+    {
+        return (preg_match('/^(\d+\s+(day|week|month|quarter|year))s?$/i', trim($interval), $matches))
+            ? $matches[1]
+            : false;
     }
 }

@@ -23,29 +23,29 @@ class DAO extends CommonDAO
     /**
      * Select campaigns that are older than the parameter.
      *
-     * @param int $months the threshold for deletion
+     * @param string $interval the threshold for deletion
      *
      * @return int the number of campaigns selected
      */
-    public function selectOldCampaigns($months)
+    public function selectOldCampaigns($interval)
     {
         $sql =
             "SELECT id, subject
             FROM {$this->tables['message']}
-            WHERE status = 'sent' AND sent < CURRENT_DATE() - INTERVAL $months MONTH
+            WHERE status = 'sent' AND sent < CURRENT_DATE() - INTERVAL $interval
             ORDER BY id";
 
         return $this->dbCommand->queryAll($sql);
     }
 
-    public function deleteUnlinkedBounces($days)
+    public function deleteUnlinkedBounces($interval)
     {
         $sql =
             "DELETE
             FROM {$this->tables['bounce']} AS b
             LEFT JOIN {$this->tables['user_message_bounce']} AS umb ON b.id = umb.bounce
             WHERE umb.bounceid IS NULL
-            AND DATE(b.date) < CURRENT_DATE() - INTERVAL $days DAY";
+            AND DATE(b.date) < CURRENT_DATE() - INTERVAL $interval";
 
         return $this->dbCommand->queryAffectedRows($sql);
     }
@@ -53,16 +53,16 @@ class DAO extends CommonDAO
     /**
      * Delete rows from the event log that are older than the parameter.
      *
-     * @param int $months the threshold for deletion
+     * @param string $interval the threshold for deletion
      *
      * @return int the number of rows deleted
      */
-    public function trimEventLog($months)
+    public function trimEventLog($interval)
     {
         $sql =
             "DELETE
             FROM {$this->tables['eventlog']}
-            WHERE DATE(entered) < CURRENT_DATE() - INTERVAL $months MONTH";
+            WHERE DATE(entered) < CURRENT_DATE() - INTERVAL $interval";
 
         return $this->dbCommand->queryAffectedRows($sql);
     }
@@ -71,23 +71,23 @@ class DAO extends CommonDAO
      * Delete rows from the bounce and user_message_bounce tables that are older than the parameter.
      * Also delete rows from bounceregex_bounce that refer to non-existent bounces.
      *
-     * @param int $days the threshold for deletion
+     * @param string $interval the threshold for deletion
      *
      * @return array totals of the three deletions
      */
-    public function deleteBounces($days)
+    public function deleteBounces($interval)
     {
         $sql =
             "DELETE
             FROM {$this->tables['bounce']}
-            WHERE DATE(date) < CURRENT_DATE() - INTERVAL $days DAY";
+            WHERE DATE(date) < CURRENT_DATE() - INTERVAL $interval";
 
         $bouncesDeleted = $this->dbCommand->queryAffectedRows($sql);
 
         $sql =
             "DELETE
             FROM {$this->tables['user_message_bounce']}
-            WHERE DATE(time) < CURRENT_DATE() - INTERVAL $days DAY";
+            WHERE DATE(time) < CURRENT_DATE() - INTERVAL $interval";
 
         $umbDeleted = $this->dbCommand->queryAffectedRows($sql);
 
