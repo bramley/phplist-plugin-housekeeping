@@ -58,7 +58,9 @@ END;
         /*
          * Process messages
          */
-        if ($interval = $this->validateInterval(getConfig('housekeeping_message_age'))) {
+        $age = getConfig('housekeeping_message_age');
+
+        if ($interval = $this->validateInterval($age)) {
             $campaigns = $this->dao->selectOldCampaigns($interval);
 
             if (count($campaigns) > 0) {
@@ -73,14 +75,16 @@ END;
                     }
                 }
             } else {
-                $this->context->output("No campaigns older than $interval to delete");
+                $this->context->output("No campaigns older than $age to delete");
             }
         }
 
         /*
          * Process event log
          */
-        if ($interval = $this->validateInterval(getConfig('housekeeping_event_log_age'))) {
+        $age = getConfig('housekeeping_event_log_age');
+
+        if ($interval = $this->validateInterval($age)) {
             $deletedCount = $this->dao->trimEventLog($interval);
 
             if ($deletedCount > 0) {
@@ -88,14 +92,16 @@ END;
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No event log rows older than $interval to delete");
+                $this->context->output("No event log rows older than $age to delete");
             }
         }
 
         /*
          * Process bounces
          */
-        if ($interval = $this->validateInterval(getConfig('housekeeping_bounces_age'))) {
+        $age = getConfig('housekeeping_bounces_age');
+
+        if ($interval = $this->validateInterval($age)) {
             list($bounces, $umb, $regexBounce) = $this->dao->deleteBounces($interval);
 
             if ($bounces > 0) {
@@ -103,7 +109,7 @@ END;
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No bounce rows older than $interval to delete");
+                $this->context->output("No bounce rows older than $age to delete");
             }
 
             if ($umb > 0) {
@@ -111,7 +117,7 @@ END;
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No user_message_bounce rows older than $interval to delete");
+                $this->context->output("No user_message_bounce rows older than $age to delete");
             }
 
             if ($regexBounce > 0) {
@@ -135,6 +141,23 @@ END;
                 $this->context->output($event);
             } else {
                 $this->context->output('No rows to delete from linktrack_forward');
+            }
+        }
+
+        /*
+         * Process user history
+         */
+        $age = getConfig('housekeeping_user_history_age');
+
+        if ($interval = $this->validateInterval($age)) {
+            $deletedCount = $this->dao->deleteUserHistory($interval);
+
+            if ($deletedCount > 0) {
+                $event = sprintf('%d rows deleted from the user history table', $deletedCount);
+                $this->logEvent($event);
+                $this->context->output($event);
+            } else {
+                $this->context->output("No user history rows older than $age to delete");
             }
         }
         $this->context->finish();

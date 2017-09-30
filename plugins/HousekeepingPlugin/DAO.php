@@ -119,4 +119,25 @@ class DAO extends CommonDAO
 
         return $this->dbCommand->queryAffectedRows($sql);
     }
+
+    /**
+     * Delete rows from the user_history table that are older than the parameter from the most
+     * recent user history row for each subscriber.
+     *
+     * @return int the number of rows deleted
+     */
+    public function deleteUserHistory($interval)
+    {
+        $sql =
+            "DELETE uh
+            FROM {$this->tables['user_history']}  uh
+            JOIN (
+                SELECT userid, max(date) AS maxdate
+                FROM {$this->tables['user_history']}
+                GROUP BY userid
+            ) AS t2 ON t2.userid = uh.userid
+            WHERE uh.date < t2.maxdate - INTERVAL $interval";
+
+        return $this->dbCommand->queryAffectedRows($sql);
+    }
 }

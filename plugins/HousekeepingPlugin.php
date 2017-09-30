@@ -63,6 +63,13 @@ class HousekeepingPlugin extends phplistPlugin
             'allowempty' => true,
             'category' => 'Housekeeping',
         ),
+        'housekeeping_user_history_age' => array(
+            'description' => 'Threshold for deleting user history records. Leave empty to disable this function.',
+            'type' => 'text',
+            'value' => '',
+            'allowempty' => 1,
+            'category' => 'Housekeeping',
+        ),
     );
 
     public function __construct()
