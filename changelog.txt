@@ -1,3 +1,7 @@
+version 1.0.4+20171116
+      Made text translateable
+      Added English texts
+
 version 1.0.3+20170930
       Add setting to delete user history
 

@@ -39,9 +39,10 @@ class Controller extends CommonController
 
             return;
         }
-        echo <<<'END'
+        $prompt = s('To run the housekeeping process click the Submit button');
+        echo <<<END
         <form method="post">
-            <p>To run the housekeeping process click the Submit button</p>
+            <p>$prompt</p>
             <input type="submit" name="submit" value="Submit"/>
         </form>
 END;
@@ -69,13 +70,13 @@ END;
                     $subject = $c['subject'];
 
                     if ($r = $this->messageDao->deleteMessage($id)) {
-                        $event = sprintf('Campaign %d %s deleted', $id, $subject);
+                        $event = s('Campaign %d %s deleted', $id, $subject);
                         $this->logEvent($event);
                         $this->context->output($event);
                     }
                 }
             } else {
-                $this->context->output("No campaigns older than $age to delete");
+                $this->context->output(s('No campaigns older than %s to delete', $age));
             }
         }
 
@@ -88,11 +89,11 @@ END;
             $deletedCount = $this->dao->trimEventLog($interval);
 
             if ($deletedCount > 0) {
-                $event = sprintf('%d rows deleted from the event log', $deletedCount);
+                $event = s('%d rows deleted from the event log', $deletedCount);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No event log rows older than $age to delete");
+                $this->context->output(s('No event log rows older than %s to delete', $age));
             }
         }
 
@@ -105,27 +106,27 @@ END;
             list($bounces, $umb, $regexBounce) = $this->dao->deleteBounces($interval);
 
             if ($bounces > 0) {
-                $event = sprintf('%d bounce rows deleted', $bounces);
+                $event = s('%d bounce rows deleted', $bounces);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No bounce rows older than $age to delete");
+                $this->context->output(s('No bounce rows older than %s to delete', $age));
             }
 
             if ($umb > 0) {
-                $event = sprintf('%d user_message_bounce rows deleted', $umb);
+                $event = s('%d user_message_bounce rows deleted', $umb);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No user_message_bounce rows older than $age to delete");
+                $this->context->output(s('No user_message_bounce rows older than %s to delete', $age));
             }
 
             if ($regexBounce > 0) {
-                $event = sprintf('%d rows deleted from the bounceregex_bounce table', $regexBounce);
+                $event = s('%d rows deleted from the bounceregex_bounce table', $regexBounce);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output('No rows to delete from bounceregex_bounce');
+                $this->context->output(s('No rows to delete from bounceregex_bounce'));
             }
         }
 
@@ -136,11 +137,11 @@ END;
             $deletedCount = $this->dao->deleteUnusedForwards();
 
             if ($deletedCount > 0) {
-                $event = sprintf('%d rows deleted from the linktrack_forward table', $deletedCount);
+                $event = s('%d rows deleted from the linktrack_forward table', $deletedCount);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output('No rows to delete from linktrack_forward');
+                $this->context->output(s('No rows to delete from linktrack_forward'));
             }
         }
 
@@ -153,11 +154,11 @@ END;
             $deletedCount = $this->dao->deleteUserHistory($interval);
 
             if ($deletedCount > 0) {
-                $event = sprintf('%d rows deleted from the user history table', $deletedCount);
+                $event = s('%d rows deleted from the user history table', $deletedCount);
                 $this->logEvent($event);
                 $this->context->output($event);
             } else {
-                $this->context->output("No user history rows older than $age to delete");
+                $this->context->output(s('No user history rows older than %s to delete', $age));
             }
         }
         $this->context->finish();

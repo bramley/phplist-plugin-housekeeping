@@ -35,6 +35,7 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.0.4+20171116  Made text translateable
     1.0.3+20170930  Add setting to delete user history
     1.0.2+20170911  Correct use of wrong number of records deleted
     1.0.1+20170911  Enter interval in full

@@ -34,46 +34,45 @@ class HousekeepingPlugin extends phplistPlugin
         'process' => 'Housekeeping',
     );
 
-    public $settings = array(
-        'housekeeping_message_age' => array(
-            'description' => 'Threshold for deleting campaigns. Leave empty to disable this function.',
-            'type' => 'text',
-            'value' => '',
-            'allowempty' => 1,
-            'category' => 'Housekeeping',
-        ),
-        'housekeeping_event_log_age' => array(
-            'description' => 'Threshold for deleting event log records. Leave empty to disable this function.',
-            'type' => 'text',
-            'value' => '',
-            'allowempty' => 1,
-            'category' => 'Housekeeping',
-        ),
-        'housekeeping_bounces_age' => array(
-            'description' => 'Threshold for deleting bounce records. Leave empty to disable this function.',
-            'type' => 'text',
-            'value' => '',
-            'allowempty' => 1,
-            'category' => 'Housekeeping',
-        ),
-        'housekeeping_unused_forwards' => array(
-            'description' => 'Whether to delete rows from linktrack_forward that are not used.',
-            'type' => 'boolean',
-            'value' => 0,
-            'allowempty' => true,
-            'category' => 'Housekeeping',
-        ),
-        'housekeeping_user_history_age' => array(
-            'description' => 'Threshold for deleting user history records. Leave empty to disable this function.',
-            'type' => 'text',
-            'value' => '',
-            'allowempty' => 1,
-            'category' => 'Housekeeping',
-        ),
-    );
-
     public function __construct()
     {
+        $this->settings = array(
+            'housekeeping_message_age' => array(
+                'description' => s('Threshold for deleting campaigns. Leave empty to disable this function.'),
+                'type' => 'text',
+                'value' => '',
+                'allowempty' => 1,
+                'category' => 'Housekeeping',
+            ),
+            'housekeeping_event_log_age' => array(
+                'description' => s('Threshold for deleting event log records. Leave empty to disable this function.'),
+                'type' => 'text',
+                'value' => '',
+                'allowempty' => 1,
+                'category' => 'Housekeeping',
+            ),
+            'housekeeping_bounces_age' => array(
+                'description' => s('Threshold for deleting bounce records. Leave empty to disable this function.'),
+                'type' => 'text',
+                'value' => '',
+                'allowempty' => 1,
+                'category' => 'Housekeeping',
+            ),
+            'housekeeping_unused_forwards' => array(
+                'description' => s('Whether to delete rows from linktrack_forward that are not used.'),
+                'type' => 'boolean',
+                'value' => 0,
+                'allowempty' => true,
+                'category' => 'Housekeeping',
+            ),
+            'housekeeping_user_history_age' => array(
+                'description' => s('Threshold for deleting user history records. Leave empty to disable this function.'),
+                'type' => 'text',
+                'value' => '',
+                'allowempty' => 1,
+                'category' => 'Housekeeping',
+            ),
+        );
         $this->coderoot = dirname(__FILE__) . '/' . __CLASS__ . '/';
         $this->version = (is_file($f = $this->coderoot . self::VERSION_FILE))
             ? file_get_contents($f)
