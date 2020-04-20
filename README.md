@@ -35,6 +35,7 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.1.1+20200420  Rework dependency container
     1.1.0+20200419  Add page to delete all bounces
     1.0.4+20171116  Made text translateable
     1.0.3+20170930  Add setting to delete user history

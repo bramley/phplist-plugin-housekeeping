@@ -14,11 +14,10 @@
 /**
  * This file creates a dependency injection container.
  */
-use phpList\plugin\Common\Container;
 use phpList\plugin\HousekeepingPlugin\DAO;
 use Psr\Container\ContainerInterface;
 
-return new Container([
+return [
     'phpList\plugin\HousekeepingPlugin\Controller' => function (ContainerInterface $container) {
         return new phpList\plugin\HousekeepingPlugin\Controller(
             $container->get('DAO'),
@@ -31,4 +30,4 @@ return new Container([
             $container->get('phpList\plugin\Common\DB')
         );
     },
-]);
+];

@@ -13,6 +13,7 @@
 
 namespace phpList\plugin\HousekeepingPlugin;
 
+use phpList\plugin\Common\Container;
 use phpList\plugin\Common\ControllerFactoryBase;
 
 /**
@@ -33,7 +34,8 @@ class ControllerFactory extends ControllerFactoryBase
      */
     public function createController($pi, array $params)
     {
-        $container = include __DIR__ . '/dic.php';
+        $depends = include __DIR__ . '/depends.php';
+        $container = new Container($depends);
         $class = __NAMESPACE__ . '\\Controller';
 
         return $container->get($class);
