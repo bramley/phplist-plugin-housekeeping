@@ -1,3 +1,6 @@
+version 1.1.2+20200513
+      delete rows instead of truncate table to avoid autoincrement field being reset
+
 version 1.1.1+20200420
       Rework dependency container
 

@@ -15,5 +15,5 @@
  * Delete all bounces by truncating the bounce table
  */
 
-Sql_Query(sprintf('truncate %s', $tables['bounce']));
+Sql_Query(sprintf('delete from %s', $tables['bounce']));
 cl_output('All bounces have been deleted');
