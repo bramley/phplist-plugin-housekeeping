@@ -35,6 +35,7 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.2.0+20200627  Use core phplist page lock
     1.1.3+20200514  Delete duplicate bounces from user_message_bounce
     1.1.2+20200513  Change way of deleting bounces
     1.1.1+20200420  Rework dependency container

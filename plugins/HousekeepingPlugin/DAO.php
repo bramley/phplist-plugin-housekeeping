@@ -140,4 +140,39 @@ class DAO extends CommonDAO
 
         return $this->dbCommand->queryAffectedRows($sql);
     }
+
+    /**
+     * Test whether there is already a housekeeping process running.
+     *
+     * @return array|null
+     */
+    public function checkLock($page)
+    {
+        $sql = <<<END
+            SELECT id, NOW() - modified AS age
+            FROM {$this->tables['sendprocess']}
+            WHERE page = "$page" AND alive
+            ORDER BY started DESC
+END;
+        $row = $this->dbCommand->queryRow($sql);
+
+        return $row;
+    }
+
+    /**
+     * Set an existing row to not be alive so that the housekeeping process will eventually stop itself.
+     *
+     * @return int
+     */
+    public function deleteLock($id)
+    {
+        $sql = <<<END
+            UPDATE {$this->tables['sendprocess']}
+            SET alive = 0
+            WHERE id = $id
+END;
+        $rowsDeleted = $this->dbCommand->queryAffectedRows($sql);
+
+        return $rowsDeleted;
+    }
 }

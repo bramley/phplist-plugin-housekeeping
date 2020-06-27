@@ -17,6 +17,7 @@
 class HousekeepingPlugin extends phplistPlugin
 {
     const VERSION_FILE = 'version.txt';
+    const PROCESS_PAGE = 'process';
 
     /*
      *  Inherited variables
@@ -25,13 +26,13 @@ class HousekeepingPlugin extends phplistPlugin
     public $authors = 'Duncan Cameron';
     public $description = 'Selectively delete old data from the phplist database';
     public $documentationUrl = 'https://resources.phplist.com/plugin/housekeeping';
-    public $commandlinePluginPages = array('process', 'deletebounces');
+    public $commandlinePluginPages = array(self::PROCESS_PAGE, 'deletebounces');
     public $topMenuLinks = array(
-        'process' => array('category' => 'system'),
+        self::PROCESS_PAGE => array('category' => 'system'),
     );
 
     public $pageTitles = array(
-        'process' => 'Housekeeping',
+        self::PROCESS_PAGE => 'Housekeeping',
     );
 
     public function __construct()
