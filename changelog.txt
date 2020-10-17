@@ -1,3 +1,6 @@
+version 1.2.1+20201017
+      Remove the query to delete duplicate bounces because it was too intensive.
+
 version 1.2.0+20200627
       Use core phplist page lock to avoid running multiple instances of the housekeeping process.
       Add feature to gracefully stop a running process.
