@@ -23,13 +23,11 @@ use phpList\plugin\Common\PageURL;
 class Controller extends CommonController
 {
     private $dao;
-    private $messageDao;
     private $context;
 
-    public function __construct($dao, $messageDao, $context)
+    public function __construct($dao, $context)
     {
         $this->dao = $dao;
-        $this->messageDao = $messageDao;
         $this->context = $context;
         parent::__construct();
     }
@@ -100,7 +98,7 @@ END;
                         $id = $c['id'];
                         $subject = $c['subject'];
 
-                        if ($r = $this->messageDao->deleteMessage($id)) {
+                        if ($r = $this->dao->deleteMessage($id)) {
                             $event = s('Campaign %d %s deleted', $id, $subject);
                             $this->logEvent($event);
                             $this->context->output($event);

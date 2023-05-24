@@ -14,12 +14,15 @@
 namespace phpList\plugin\HousekeepingPlugin;
 
 use phpList\plugin\Common\DAO as CommonDAO;
+use phpList\plugin\Common\DAO\MessageTrait;
 
 /**
  * DAO class that provides access to database.
  */
 class DAO extends CommonDAO
 {
+    use MessageTrait;
+
     /**
      * Select campaigns that are older than the parameter.
      *

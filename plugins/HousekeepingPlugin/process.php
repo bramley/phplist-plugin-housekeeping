@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * HousekeepingPlugin for phplist.
  *
  * This file is a part of HousekeepingPlugin.
@@ -11,7 +11,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU General Public License, Version 3
  */
 
-/**
+/*
  * This is the entry code invoked by phplist.
  */
 if (!$commandline) {

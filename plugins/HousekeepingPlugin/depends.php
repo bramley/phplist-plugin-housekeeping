@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * HousekeepingPlugin for phplist.
  *
  * This file is a part of HousekeepingPlugin.
@@ -11,7 +11,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU General Public License, Version 3
  */
 
-/**
+/*
  * This file creates a dependency injection container.
  */
 use phpList\plugin\HousekeepingPlugin\DAO;
@@ -21,7 +21,6 @@ return [
     'phpList\plugin\HousekeepingPlugin\Controller' => function (ContainerInterface $container) {
         return new phpList\plugin\HousekeepingPlugin\Controller(
             $container->get('DAO'),
-            $container->get('phpList\plugin\Common\DAO\Message'),
             $container->get('phpList\plugin\Common\Context')
         );
     },
