@@ -35,6 +35,7 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.3.2+20231020  Add link to configuration settings to the housekeeping page
     1.3.1+20230524  Use MessageTrait instead of Message DAO
     1.3.0+20210718  Spanish translation from Elías Torres. Fixes #1.
     1.2.1+20201017  Remove query to delete duplicate bounces from user_message_bounce

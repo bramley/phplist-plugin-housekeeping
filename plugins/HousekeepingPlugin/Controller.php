@@ -62,6 +62,7 @@ END;
 END;
         }
         echo <<<END
+        <a class="button" target="_blank" href="./?page=configure#housekeeping">Configuration settings</a>
         <form method="post">
         $formBody
         </form>
