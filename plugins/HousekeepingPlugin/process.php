@@ -14,7 +14,7 @@
 /*
  * This is the entry code invoked by phplist.
  */
-if (!$commandline) {
+if (!$commandline && !$inRemoteCall) {
     $_GET['action'] = 'browser';
 }
 phpList\plugin\Common\Main::run(

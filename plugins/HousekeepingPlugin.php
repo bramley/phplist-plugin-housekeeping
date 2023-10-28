@@ -27,6 +27,7 @@ class HousekeepingPlugin extends phplistPlugin
     public $description = 'Selectively delete old data from the phplist database';
     public $documentationUrl = 'https://resources.phplist.com/plugin/housekeeping';
     public $commandlinePluginPages = array(self::PROCESS_PAGE, 'deletebounces');
+    public $remotePages = [self::PROCESS_PAGE];
     public $topMenuLinks = array(
         self::PROCESS_PAGE => array('category' => 'system'),
     );
