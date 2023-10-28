@@ -14,9 +14,9 @@
 /*
  * This is the entry code invoked by phplist.
  */
-if (!$commandline && !$inRemoteCall) {
-    $_GET['action'] = 'browser';
-}
+$action = ($commandline || $inRemoteCall) ? null : 'browser';
+
 phpList\plugin\Common\Main::run(
-    new phpList\plugin\HousekeepingPlugin\ControllerFactory()
+    new phpList\plugin\HousekeepingPlugin\ControllerFactory(),
+    $action
 );
