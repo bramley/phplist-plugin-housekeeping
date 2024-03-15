@@ -44,7 +44,7 @@ class DAO extends CommonDAO
     public function deleteUnlinkedBounces($interval)
     {
         $sql =
-            "DELETE
+            "DELETE b
             FROM {$this->tables['bounce']} AS b
             LEFT JOIN {$this->tables['user_message_bounce']} AS umb ON b.id = umb.bounce
             WHERE umb.bounceid IS NULL
@@ -71,28 +71,40 @@ class DAO extends CommonDAO
     }
 
     /**
-     * Delete rows from the bounce and user_message_bounce tables that are older than the parameter.
-     * Also delete rows from bounceregex_bounce that refer to non-existent bounces.
+     * Delete rows from the bounce table that are older than the parameter and and the related rows from the
+     * user_message_bounce table.
+     * Delete rows from the bounce table that are for blacklisted subscribers.
+     * Delete rows from bounceregex_bounce that refer to non-existent bounces.
      *
      * @param string $interval the threshold for deletion
      *
-     * @return array totals of the three deletions
+     * @return array totals of the deletions
      */
     public function deleteBounces($interval)
     {
-        $sql =
-            "DELETE
-            FROM {$this->tables['bounce']}
-            WHERE DATE(date) < CURRENT_DATE() - INTERVAL $interval";
+        $sql = <<<END
+            DELETE umb
+            FROM {$this->tables['user_message_bounce']} umb
+            JOIN {$this->tables['bounce']} AS b ON b.id = umb.bounce
+            WHERE DATE(b.date) < CURRENT_DATE() - INTERVAL $interval
+END;
+        $umbDeleted = $this->dbCommand->queryAffectedRows($sql);
 
+        $sql = <<<END
+            DELETE
+            FROM {$this->tables['bounce']}
+            WHERE DATE(date) < CURRENT_DATE() - INTERVAL $interval
+END;
         $bouncesDeleted = $this->dbCommand->queryAffectedRows($sql);
 
-        $sql =
-            "DELETE
-            FROM {$this->tables['user_message_bounce']}
-            WHERE DATE(time) < CURRENT_DATE() - INTERVAL $interval";
-
-        $umbDeleted = $this->dbCommand->queryAffectedRows($sql);
+        $sql = <<<END
+            DELETE b
+            FROM {$this->tables['bounce']} b
+            JOIN {$this->tables['user_message_bounce']} umb on umb.bounce = b.id
+            JOIN {$this->tables['user']} u on u.id = umb.user
+            WHERE u.blacklisted = 1
+END;
+        $blacklistedDeleted = $this->dbCommand->queryAffectedRows($sql);
 
         $sql =
             "DELETE brb
@@ -102,7 +114,7 @@ class DAO extends CommonDAO
 
         $bounceRegexDeleted = $this->dbCommand->queryAffectedRows($sql);
 
-        return [$bouncesDeleted, $umbDeleted, $bounceRegexDeleted];
+        return [$bouncesDeleted, $umbDeleted, $blacklistedDeleted, $bounceRegexDeleted];
     }
 
     /**
