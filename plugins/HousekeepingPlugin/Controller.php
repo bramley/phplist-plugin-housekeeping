@@ -135,7 +135,7 @@ END;
             $age = getConfig('housekeeping_bounces_age');
 
             if ($interval = $this->validateInterval($age)) {
-                list($bounces, $umb, $blacklisted, $regexBounce) = $this->dao->deleteBounces($interval);
+                list($bounces, $umb, $blacklisted, $umbOrphan, $regexBounce) = $this->dao->deleteBounces($interval);
 
                 if ($bounces > 0) {
                     $event = s('%d bounce rows deleted', $bounces);
@@ -149,8 +149,6 @@ END;
                     $event = s('%d user_message_bounce rows deleted', $umb);
                     $this->logEvent($event);
                     $this->context->output($event);
-                } else {
-                    $this->context->output(s('No user_message_bounce rows older than %s to delete', $age));
                 }
 
                 if ($blacklisted > 0) {
@@ -159,12 +157,16 @@ END;
                     $this->context->output($event);
                 }
 
+                if ($umbOrphan > 0) {
+                    $event = s('%d orphan user_message_bounce rows deleted', $umbOrphan);
+                    $this->logEvent($event);
+                    $this->context->output($event);
+                }
+
                 if ($regexBounce > 0) {
                     $event = s('%d rows deleted from the bounceregex_bounce table', $regexBounce);
                     $this->logEvent($event);
                     $this->context->output($event);
-                } else {
-                    $this->context->output(s('No rows to delete from bounceregex_bounce'));
                 }
                 $this->keepLock($processId);
             }

@@ -106,6 +106,14 @@ END;
 END;
         $blacklistedDeleted = $this->dbCommand->queryAffectedRows($sql);
 
+        $sql = <<<END
+            DELETE umb
+            FROM {$this->tables['user_message_bounce']} umb
+            LEFT JOIN {$this->tables['bounce']} b ON umb.bounce = b.id
+            WHERE b.id IS NULL
+END;
+        $umbOrphan = $this->dbCommand->queryAffectedRows($sql);
+
         $sql =
             "DELETE brb
             FROM {$this->tables['bounceregex_bounce']} AS brb
@@ -114,7 +122,7 @@ END;
 
         $bounceRegexDeleted = $this->dbCommand->queryAffectedRows($sql);
 
-        return [$bouncesDeleted, $umbDeleted, $blacklistedDeleted, $bounceRegexDeleted];
+        return [$bouncesDeleted, $umbDeleted, $blacklistedDeleted, $umbOrphan, $bounceRegexDeleted];
     }
 
     /**
