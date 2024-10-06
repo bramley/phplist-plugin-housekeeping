@@ -165,6 +165,22 @@ END;
     }
 
     /**
+     * Delete rows from the user_message_view table that are older than the parameter.
+     *
+     * @return int the number of rows deleted
+     */
+    public function deleteUserMessageView($interval)
+    {
+        $sql = <<<END
+            DELETE
+            FROM {$this->tables['user_message_view']}
+            WHERE DATE(viewed) < CURRENT_DATE() - INTERVAL $interval
+END;
+
+        return $this->dbCommand->queryAffectedRows($sql);
+    }
+
+    /**
      * Test whether there is already a housekeeping process running.
      *
      * @return array|null

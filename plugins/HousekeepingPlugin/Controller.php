@@ -204,6 +204,24 @@ END;
                 }
                 $this->keepLock($processId);
             }
+
+            /*
+             * Process user_message_view
+             */
+            $age = getConfig('housekeeping_user_message_view_age');
+
+            if ($interval = $this->validateInterval($age)) {
+                $deletedCount = $this->dao->deleteUserMessageView($interval);
+
+                if ($deletedCount > 0) {
+                    $event = s('%d rows deleted from the user_message_view table', $deletedCount);
+                    $this->logEvent($event);
+                    $this->context->output($event);
+                } else {
+                    $this->context->output(s('No user_message_view rows older than %s to delete', $age));
+                }
+                $this->keepLock($processId);
+            }
         } catch (\Exception $e) {
             $this->context->output($e->getMessage());
             // continue

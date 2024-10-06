@@ -74,6 +74,13 @@ class HousekeepingPlugin extends phplistPlugin
                 'allowempty' => 1,
                 'category' => 'Housekeeping',
             ),
+            'housekeeping_user_message_view_age' => array(
+                'description' => s('Threshold for deleting user_message_view records. Leave empty to disable this function.'),
+                'type' => 'text',
+                'value' => '',
+                'allowempty' => 1,
+                'category' => 'Housekeeping',
+            ),
         );
         $this->coderoot = dirname(__FILE__) . '/' . __CLASS__ . '/';
         $this->version = (is_file($f = $this->coderoot . self::VERSION_FILE))
