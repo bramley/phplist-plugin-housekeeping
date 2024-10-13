@@ -1,3 +1,6 @@
+version 1.4.1+20241013
+      Delete rows from the user_message_view table for messages that do not exist.
+
 version 1.4.0+20241013
       Delete rows from the user_message_view table
       CS fixer ignore language translation files

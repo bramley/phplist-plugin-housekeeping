@@ -220,6 +220,13 @@ END;
                 } else {
                     $this->context->output(s('No user_message_view rows older than %s to delete', $age));
                 }
+                $deletedCount = $this->dao->deleteUnlinkedUserMessageView();
+
+                if ($deletedCount > 0) {
+                    $event = s('%d orphan rows deleted from the user_message_view table', $deletedCount);
+                    $this->logEvent($event);
+                    $this->context->output($event);
+                }
                 $this->keepLock($processId);
             }
         } catch (\Exception $e) {

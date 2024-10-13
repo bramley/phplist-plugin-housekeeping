@@ -181,6 +181,23 @@ END;
     }
 
     /**
+     * Deletes rows from the user_message_view table for messages that do not exist.
+     *
+     * @return int the number of rows deleted
+     */
+    public function deleteUnlinkedUserMessageView()
+    {
+        $sql = <<<END
+            DELETE umv
+            FROM {$this->tables['user_message_view']} AS umv
+            LEFT JOIN {$this->tables['message']} AS m ON m.id = umv.messageid
+            WHERE m.id IS NULL
+END;
+
+        return $this->dbCommand->queryAffectedRows($sql);
+    }
+
+    /**
      * Test whether there is already a housekeeping process running.
      *
      * @return array|null
