@@ -135,7 +135,7 @@ END;
             $age = getConfig('housekeeping_bounces_age');
 
             if ($interval = $this->validateInterval($age)) {
-                list($bounces, $umb, $blacklisted, $umbOrphan, $regexBounce) = $this->dao->deleteBounces($interval);
+                list($bounces, $umb, $blacklisted, $regexBounce) = $this->dao->deleteBounces($interval);
 
                 if ($bounces > 0) {
                     $event = s('%d bounce rows deleted', $bounces);
@@ -153,12 +153,6 @@ END;
 
                 if ($blacklisted > 0) {
                     $event = s('%d bounce rows for blacklisted subscribers deleted', $blacklisted);
-                    $this->logEvent($event);
-                    $this->context->output($event);
-                }
-
-                if ($umbOrphan > 0) {
-                    $event = s('%d orphan user_message_bounce rows deleted', $umbOrphan);
                     $this->logEvent($event);
                     $this->context->output($event);
                 }

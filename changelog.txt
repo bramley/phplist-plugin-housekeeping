@@ -1,3 +1,6 @@
+version 1.4.2+20241021
+      Revert the change to delete umb rows whose related bounce row does not exist
+
 version 1.4.1+20241013
       Delete rows from the user_message_view table for messages that do not exist.
 

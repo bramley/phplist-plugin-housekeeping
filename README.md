@@ -34,6 +34,7 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.4.2+20241021  Revert the change to delete umb rows whose related bounce row does not exist
     1.4.1+20241013  Delete rows from the user_message_view table for messages that do not exist
     1.4.0+20241013  Delete rows from the user_message_view table
     1.3.5+20240316  Delete user_message_bounce rows that do not have a related bounce row
