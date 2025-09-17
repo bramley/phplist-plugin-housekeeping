@@ -101,14 +101,8 @@ class HousekeepingPlugin extends phplistPlugin
      */
     public function dependencyCheck()
     {
-        global $plugins;
-
-        return array(
-            'Common Plugin v3.6.7 or later installed' => (
-                phpListPlugin::isEnabled('CommonPlugin')
-                && version_compare($plugins['CommonPlugin']->version, '3.6.7') >= 0
-            ),
-            'PHP version 5.4 or greater' => version_compare(PHP_VERSION, '5.4') > 0,
-        );
+        return [
+            'Common Plugin must be enabled' => phpListPlugin::isEnabled('CommonPlugin')
+        ];
     }
 }
