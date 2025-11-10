@@ -15,6 +15,7 @@ namespace phpList\plugin\HousekeepingPlugin;
 
 use phpList\plugin\Common\DAO as CommonDAO;
 use phpList\plugin\Common\DAO\MessageTrait;
+use phpList\plugin\Common\Logger;
 
 /**
  * DAO class that provides access to database.
@@ -143,17 +144,59 @@ END;
      */
     public function deleteUserHistory($interval)
     {
-        $sql =
-            "DELETE uh
-            FROM {$this->tables['user_history']}  uh
-            JOIN (
-                SELECT userid, max(date) AS maxdate
-                FROM {$this->tables['user_history']}
-                GROUP BY userid
-            ) AS t2 ON t2.userid = uh.userid
-            WHERE uh.date < t2.maxdate - INTERVAL $interval";
+        global $usertable_prefix;
 
-        return $this->dbCommand->queryAffectedRows($sql);
+        $logger = Logger::instance();
+        $tableName = $usertable_prefix . 'user_history_housekeeping_cutoff';
+        $sql1 = <<<END
+    DROP TABLE IF EXISTS $tableName;
+END;
+        $result = $this->dbCommand->query($sql1);
+        $sql2 = <<<END
+    CREATE TABLE $tableName (
+        userid INT PRIMARY KEY,
+        cutoff_date DATETIME
+    );
+END;
+        $result = $this->dbCommand->query($sql2);
+
+        $start = 0;
+        $limit = 10000;
+        $totalRows = 0;
+
+        while (true) {
+            $sql = <<<END
+    TRUNCATE TABLE $tableName;
+END;
+            $result = $this->dbCommand->query($sql);
+            $query = <<<END
+    INSERT INTO $tableName
+    SELECT u.id, MAX(uh.date) - INTERVAL $interval
+    FROM {$this->tables['user']} u
+    JOIN {$this->tables['user_history']} uh ON u.id = uh.userid
+    GROUP BY u.id
+    ORDER BY u.id
+    LIMIT $start, $limit
+END;
+            $inserted = $this->dbCommand->queryAffectedRows($query);
+
+            if ($inserted == 0) {
+                break;
+            }
+            $logger->debug("$inserted subscribers");
+            $start += $limit;
+
+            $sql = <<<END
+    DELETE uh FROM {$this->tables['user_history']} uh
+    JOIN $tableName t ON t.userid = uh.userid
+    WHERE uh.date < t.cutoff_date
+END;
+            $rows = $this->dbCommand->queryAffectedRows($sql);
+            $totalRows += $rows;
+            $logger->debug("$rows rows deleted, total rows deleted $totalRows");
+        }
+
+        return $totalRows;
     }
 
     /**
