@@ -23,6 +23,7 @@ return $config->setRules([
         'blank_line_after_namespace' => true,
         'visibility_required' => false,
         'global_namespace_import' => false,
+        'blank_line_after_opening_tag' => false,
     ])
     ->setFinder($finder)
 ;
