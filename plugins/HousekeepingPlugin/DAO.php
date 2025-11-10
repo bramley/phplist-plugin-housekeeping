@@ -149,54 +149,48 @@ END;
         $logger = Logger::instance();
         $tableName = $usertable_prefix . 'user_history_housekeeping_cutoff';
         $sql1 = <<<END
-    DROP TABLE IF EXISTS $tableName;
+    DROP TEMPORARY TABLE IF EXISTS $tableName;
 END;
         $result = $this->dbCommand->query($sql1);
         $sql2 = <<<END
-    CREATE TABLE $tableName (
+    CREATE TEMPORARY TABLE $tableName (
         userid INT PRIMARY KEY,
         cutoff_date DATETIME
     );
 END;
         $result = $this->dbCommand->query($sql2);
 
+        $sql3 = <<<END
+    INSERT INTO $tableName
+    SELECT userid, MAX(date) - INTERVAL $interval
+    FROM {$this->tables['user_history']}
+    GROUP BY userid;
+END;
+        $totalRows = $this->dbCommand->queryAffectedRows($sql3);
+        $logger->debug("$totalRows rows to process");
         $start = 0;
         $limit = 10000;
-        $totalRows = 0;
+        $totalDeleted = 0;
 
-        while (true) {
+        while ($start < $totalRows) {
             $sql = <<<END
-    TRUNCATE TABLE $tableName;
-END;
-            $result = $this->dbCommand->query($sql);
-            $query = <<<END
-    INSERT INTO $tableName
-    SELECT u.id, MAX(uh.date) - INTERVAL $interval
-    FROM {$this->tables['user']} u
-    JOIN {$this->tables['user_history']} uh ON u.id = uh.userid
-    GROUP BY u.id
-    ORDER BY u.id
-    LIMIT $start, $limit
-END;
-            $inserted = $this->dbCommand->queryAffectedRows($query);
-
-            if ($inserted == 0) {
-                break;
-            }
-            $logger->debug("$inserted subscribers");
-            $start += $limit;
-
-            $sql = <<<END
-    DELETE uh FROM {$this->tables['user_history']} uh
-    JOIN $tableName t ON t.userid = uh.userid
+    DELETE uh
+    FROM {$this->tables['user_history']} uh
+    JOIN (
+        SELECT userid, cutoff_date
+        FROM  $tableName
+        ORDER BY userid
+        LIMIT $start, $limit
+    ) AS t ON t.userid = uh.userid
     WHERE uh.date < t.cutoff_date
 END;
-            $rows = $this->dbCommand->queryAffectedRows($sql);
-            $totalRows += $rows;
-            $logger->debug("$rows rows deleted, total rows deleted $totalRows");
+            $deleted = $this->dbCommand->queryAffectedRows($sql);
+            $totalDeleted += $deleted;
+            $logger->debug("$deleted rows deleted, total rows deleted $totalDeleted");
+            $start += $limit;
         }
 
-        return $totalRows;
+        return $totalDeleted;
     }
 
     /**

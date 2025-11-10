@@ -34,6 +34,7 @@ This plugin is free but if you install and find it useful then a donation to sup
 ## Version history ##
 
     version     Description
+    1.5.0+20260306  Improve performance of deleting user history records
     1.4.2+20241021  Revert the change to delete umb rows whose related bounce row does not exist
     1.4.1+20241013  Delete rows from the user_message_view table for messages that do not exist
     1.4.0+20241013  Delete rows from the user_message_view table
