@@ -49,7 +49,7 @@ class DAO extends CommonDAO
             FROM {$this->tables['bounce']} AS b
             LEFT JOIN {$this->tables['user_message_bounce']} AS umb ON b.id = umb.bounce
             WHERE umb.bounceid IS NULL
-            AND DATE(b.date) < CURRENT_DATE() - INTERVAL $interval";
+            AND b.date < CURRENT_DATE() - INTERVAL $interval";
 
         return $this->dbCommand->queryAffectedRows($sql);
     }
@@ -66,7 +66,7 @@ class DAO extends CommonDAO
         $sql =
             "DELETE
             FROM {$this->tables['eventlog']}
-            WHERE DATE(entered) < CURRENT_DATE() - INTERVAL $interval";
+            WHERE entered < CURRENT_DATE() - INTERVAL $interval";
 
         return $this->dbCommand->queryAffectedRows($sql);
     }
@@ -87,14 +87,14 @@ class DAO extends CommonDAO
             DELETE umb
             FROM {$this->tables['user_message_bounce']} umb
             JOIN {$this->tables['bounce']} AS b ON b.id = umb.bounce
-            WHERE DATE(b.date) < CURRENT_DATE() - INTERVAL $interval
+            WHERE b.date < CURRENT_DATE() - INTERVAL $interval
 END;
         $umbDeleted = $this->dbCommand->queryAffectedRows($sql);
 
         $sql = <<<END
             DELETE
             FROM {$this->tables['bounce']}
-            WHERE DATE(date) < CURRENT_DATE() - INTERVAL $interval
+            WHERE date < CURRENT_DATE() - INTERVAL $interval
 END;
         $bouncesDeleted = $this->dbCommand->queryAffectedRows($sql);
 
@@ -209,7 +209,7 @@ END;
         $sql = <<<END
             DELETE
             FROM {$this->tables['user_message_view']}
-            WHERE DATE(viewed) < CURRENT_DATE() - INTERVAL $interval
+            WHERE viewed < CURRENT_DATE() - INTERVAL $interval
 END;
 
         return $this->dbCommand->queryAffectedRows($sql);
